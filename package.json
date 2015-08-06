@@ -1,0 +1,30 @@
+{
+  "name": "muemit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "muemit.js",
+  "scripts": {
+    "test": "standard && tape test/*.js",
+    "minify": "uglifyjs --screw-ie8 -m -c -e  -- muemit.js > muemit.min.js"
+  },
+  "author": "Marc Bachmann <marc.brookman@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^5.0.2",
+    "tape": "^4.0.2",
+    "uglify-js": "^2.4.24"
+  },
+  "testling": {
+    "files": "test/*.js",
+    "browsers": [
+      "ie/6..latest",
+      "chrome/22..latest",
+      "firefox/16..latest",
+      "safari/latest",
+      "opera/11.0..latest",
+      "iphone/6",
+      "ipad/6",
+      "android-browser/latest"
+    ]
+  }
+}
