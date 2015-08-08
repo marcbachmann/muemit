@@ -1,7 +1,7 @@
 {
   "name": "muemit",
-  "version": "1.1.1",
-  "description": "",
+  "version": "1.1.2",
+  "description": "An tiny EventEmitter implementation that imitates the node.js EventEmitter API. Meant to run in the browser - at a size of 816bytes (minified & gzipped).",
   "main": "muemit.js",
   "browser": "muemit.min.js",
   "scripts": {
@@ -16,6 +16,25 @@
     "tape": "^4.0.2",
     "uglify-js": "^2.4.24"
   },
+  "directories": {
+    "test": "test"
+  },
+  "homepage": "https://github.com/marcbachmann/muemit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcbachmann/muemit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marcbachmann/muemit/issues"
+  },
+  "keywords": [
+    "event",
+    "events",
+    "emitter",
+    "event-emitter",
+    "eventemitter",
+    "listener"
+  ],
   "testling": {
     "files": "test/*.js",
     "browsers": [
