@@ -4,6 +4,7 @@
 function EventEmitter () {}
 
 EventEmitter.listenerCount = function (emitter, event) {
+  if (!(emitter instanceof EventEmitter)) throw new Error('emitter must be an EventEmitter instance.')
   return emitter.listeners(event).length
 }
 

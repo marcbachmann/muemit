@@ -1,7 +1,7 @@
 # muemit
 
 An tiny EventEmitter implementation that imitates the node.js EventEmitter API.
-Meant to run in the browser - at a size of 822bytes (minified & gzipped).
+Meant to run in the browser - at a size of 847bytes (minified & gzipped).
 
 ## API
 
