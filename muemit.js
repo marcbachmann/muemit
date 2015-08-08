@@ -93,4 +93,12 @@ function map (arr, func, thisBinding) {
   return elems
 }
 
-module.exports = EventEmitter
+// AMD exports
+(function (root, factory) {
+  var define = define
+  if (typeof module === 'object' && module.exports) module.exports = factory()
+  else if (typeof define === 'function' && define.amd) define([], factory)
+  else root.muemit = factory()
+}(this, function () {
+  return EventEmitter
+}))
