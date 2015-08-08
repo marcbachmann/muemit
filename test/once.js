@@ -52,9 +52,9 @@ test('EventEmitter#once(event, listener)', function (t) {
     var e1 = new EventEmitter()
 
     e1.once('foo', listener)
-    t.deepEqual(e1.listeners(), [listener])
+    t.deepEqual(e1.listeners('foo'), [listener])
 
     e1.emit('foo', 123)
-    t.deepEqual(e1.listeners(), [])
+    t.deepEqual(e1.listeners('foo'), [])
   })
 })

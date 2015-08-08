@@ -1,7 +1,7 @@
 # muemit
 
 An tiny EventEmitter implementation that imitates the node.js EventEmitter API.
-Meant to run in the browser - at a size of 839bytes (minified & gzipped).
+Meant to run in the browser - at a size of 822bytes (minified & gzipped).
 
 ## API
 
@@ -63,8 +63,8 @@ It sends a `removeListener` event for every listener that got removed.
 Returns emitter, so calls can be chained.
 
 
-### emitter.listeners([event])
-Returns all listeners as an array, or only the listeners of the specified event.
+### emitter.listeners(event)
+Returns an array with all listeners of a specific event.
 
 
 ### EventEmitter.listenerCount(emitter, event)

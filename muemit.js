@@ -51,10 +51,8 @@ p.emit = function (event) {
 }
 
 p.listeners = function (event) {
-  var events = this._e
-  if (!events) return []
-  if (event) return getListeners.call(this, events[event])
-  return [].concat.apply([], map(events, getListeners, this))
+  if (!this._e) return []
+  return map(this._e[event], getListeners)
 }
 
 p.removeListener = function (event, listener) {
@@ -74,7 +72,7 @@ p.removeAllListeners = function (event) {
   if (!events) return this
   if (!event) map(Object.keys(events), function (event) { this.removeAllListeners(event) }, this)
   else {
-    if (events.removeListener) map(this.listeners(event), function (listener) { this.emit('removeListener', event, listener) })
+    if (events.removeListener) map(this._e[event], function (l) { this.emit('removeListener', event, l.listener) }, this)
     events[event] = []
   }
   return this
@@ -91,9 +89,7 @@ function assertListener (listener) {
   if (typeof listener !== 'function') throw new TypeError('listener must be a function')
 }
 
-function getListeners (arr) {
-  return map(arr, function (l) { return l.listener })
-}
+function getListeners (l) { return l.listener }
 
 // A combination of a filter && map method
 // You can return a falsy value to exclude it from the array

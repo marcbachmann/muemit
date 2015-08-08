@@ -39,18 +39,20 @@ test('EventEmitter#removeListener(event, listener)', function (t) {
 
     e1.removeListener('foo', listener1)
 
-    t.deepEqual(e1.listeners(), [listener2])
-    t.deepEqual(e2.listeners(), [listener2])
+    t.deepEqual(e1.listeners('foo'), [listener2])
+    t.deepEqual(e2.listeners('bar'), [listener2])
   })
 
   t.test('works with EventEmitter#once(event, listener)', function (t) {
-    t.plan(2)
+    t.plan(4)
     var e1 = new EventEmitter()
     e1.once('foo', listener1)
     e1.once('bar', listener1)
-    t.deepEqual(e1.listeners(), [listener1, listener1])
+    t.deepEqual(e1.listeners('foo'), [listener1])
+    t.deepEqual(e1.listeners('bar'), [listener1])
     e1.removeListener('foo', listener1)
-    t.deepEqual(e1.listeners(), [listener1])
+    t.deepEqual(e1.listeners('foo'), [])
+    t.deepEqual(e1.listeners('bar'), [listener1])
   })
 
   t.test('removes all occurrences of the same event-listener combination', function (t) {
@@ -62,6 +64,6 @@ test('EventEmitter#removeListener(event, listener)', function (t) {
     e1.on('foo', listener2)
 
     e1.removeListener('foo', listener1)
-    t.deepEqual(e1.listeners(), [listener2])
+    t.deepEqual(e1.listeners('foo'), [listener2])
   })
 })

@@ -34,13 +34,13 @@ test('EventEmitter#removeAllListeners([event])', function (t) {
     e1.removeAllListeners()
     e2.removeAllListeners()
 
-    t.deepEqual(e1.listeners(), [])
-    t.deepEqual(e2.listeners(), [])
-    t.deepEqual(e3.listeners(), [listener2], 'Does not influence other EventEmitters')
+    t.deepEqual(e1.listeners('foo'), [])
+    t.deepEqual(e2.listeners('bar'), [])
+    t.deepEqual(e3.listeners('bar'), [listener2], 'Does not influence other EventEmitters')
   })
 
   t.test('allows to remove specific events', function (t) {
-    t.plan(5)
+    t.plan(3)
     var e1 = new EventEmitter()
     var e2 = new EventEmitter()
 
@@ -52,19 +52,19 @@ test('EventEmitter#removeAllListeners([event])', function (t) {
     e1.removeAllListeners('foo')
     e2.removeAllListeners('bar')
     t.deepEqual(e1.listeners('foo'), [])
-    t.deepEqual(e1.listeners(), [])
     t.deepEqual(e2.listeners('bar'), [])
     t.deepEqual(e2.listeners('foo'), [listener2])
-    t.deepEqual(e2.listeners(), [listener2])
   })
 
   t.test('works with EventEmitter#once(event, listener)', function (t) {
-    t.plan(2)
+    t.plan(4)
     var e1 = new EventEmitter()
     e1.once('foo', listener2)
     e1.once('bar', listener2)
-    t.deepEqual(e1.listeners(), [listener2, listener2])
+    t.deepEqual(e1.listeners('foo'), [listener2])
+    t.deepEqual(e1.listeners('bar'), [listener2])
     e1.removeAllListeners()
-    t.deepEqual(e1.listeners(), [])
+    t.deepEqual(e1.listeners('foo'), [])
+    t.deepEqual(e1.listeners('bar'), [])
   })
 })

@@ -2,12 +2,6 @@ var test = require('tape')
 var util = require('util')
 var EventEmitter = require('../')
 
-function includes (t, arr, expect) {
-  var included = true
-  expect.forEach(function (el) { if (arr.indexOf(el) === -1) included = false })
-  t.ok(included, 'Assertion error, ' + JSON.stringify(expect) + ' is not included in the array')
-}
-
 test('EventEmitter subclass', function (t) {
 
   t.test('works without executing the constructor', function (t) {
@@ -22,7 +16,7 @@ test('EventEmitter subclass', function (t) {
   })
 
   t.test('works flawlessly', function (t) {
-    t.plan(4)
+    t.plan(6)
     function MyEE () {}
     util.inherits(MyEE, EventEmitter)
 
@@ -34,11 +28,13 @@ test('EventEmitter subclass', function (t) {
     e1.on('foo', cb)
     e1.on('foo', listener)
 
-    includes(t, e1.listeners(), [listener, cb, listener])
+    t.deepEqual(e1.listeners('bar'), [listener])
+    t.deepEqual(e1.listeners('foo'), [cb, listener])
     e1.emit('bar')
-    includes(t, e1.listeners(), [cb, listener])
+    t.deepEqual(e1.listeners('bar'), [])
+    t.deepEqual(e1.listeners('foo'), [cb, listener])
     e1.emit('foo', 'some-string')
     e1.removeAllListeners()
-    t.deepEqual(e1.listeners(), [])
+    t.deepEqual(e1.listeners('foo'), [])
   })
 })

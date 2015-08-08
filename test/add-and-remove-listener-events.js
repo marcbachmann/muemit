@@ -55,4 +55,16 @@ test('removeListener event', function (t) {
     e1.emit('foo', 'test')
   })
 
+  t.test('gets triggered when EventListener#removeAllListeners gets called', function (t) {
+    t.plan(2)
+    var e1 = new EventEmitter()
+    e1.on('removeListener', function (event, listener) {
+      t.equal(event, 'foo')
+      t.equal(listener, listener1)
+    })
+
+    e1.once('foo', listener1)
+    e1.removeAllListeners('foo')
+  })
+
 })
