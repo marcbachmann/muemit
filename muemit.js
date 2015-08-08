@@ -43,11 +43,14 @@ p.emit = function (event) {
   }
 
   var emitter = emitMany[args.length] || emitMany.x
-  events[event] = map(listeners, function (l) {
-    emitter(l.listener, args)
-    if (l.once !== true) return l
-    if (events.removeListener) this.emit('removeListener', event, l.listener)
-  }, this)
+  var i = listeners.length
+  while (i--) {
+    emitter(listeners[i].listener, args)
+    if (listeners[i].once === true) {
+      if (events.removeListener) this.emit('removeListener', event, listeners[i].listener)
+      listeners.splice(i, 1)
+    }
+  }
   return true
 }
 
@@ -98,7 +101,6 @@ function map (arr, func, thisBinding) {
   if (!arr) return []
   var val
   var elems = []
-  if (Object.prototype.toString.call(arr) === '[object Object]') arr = Object.keys(arr).map(function (key) { return arr[key] })
   for (var i = 0; i < arr.length; i++) {
     val = func.call(thisBinding, arr[i])
     if (val) elems.push(val)

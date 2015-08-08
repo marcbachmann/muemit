@@ -2,6 +2,7 @@ var test = require('tape')
 var EventEmitter = require('../')
 
 function listener () {}
+function listener1 () {}
 
 test('EventEmitter#once(event, listener)', function (t) {
   t.test('requires a listener', function (t) {
@@ -51,10 +52,13 @@ test('EventEmitter#once(event, listener)', function (t) {
     t.plan(2)
     var e1 = new EventEmitter()
 
+    e1.on('foo', listener1)
     e1.once('foo', listener)
-    t.deepEqual(e1.listeners('foo'), [listener])
+    e1.once('foo', listener1)
+    e1.on('foo', listener1)
+    t.deepEqual(e1.listeners('foo'), [listener1, listener, listener1, listener1])
 
     e1.emit('foo', 123)
-    t.deepEqual(e1.listeners('foo'), [])
+    t.deepEqual(e1.listeners('foo'), [listener1, listener1])
   })
 })

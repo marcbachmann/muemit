@@ -5,8 +5,9 @@
   "main": "muemit.js",
   "browser": "muemit.min.js",
   "scripts": {
-    "test": "standard && tape test/*.js && npm run minify",
-    "minify": "uglifyjs --screw-ie8 -m -c -e  -- muemit.js > muemit.min.js"
+    "test": "standard && tape test/*.js && npm run minify && npm run stats",
+    "minify": "uglifyjs --screw-ie8 -m -c -e  -- muemit.js > muemit.min.js",
+    "stats": "uglifyjs muemit.min.js | gzip -9f | wc -c"
   },
   "author": "Marc Bachmann <marc.brookman@gmail.com>",
   "license": "MIT",
