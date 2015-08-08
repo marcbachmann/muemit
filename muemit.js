@@ -1,72 +1,94 @@
-function EventEmitter () {
-  this._events = {}
-}
+// Constructor initialization isn't needed when sub-classing the EventEmitter
+// this._e contains listener object keyed by event name
+// e.g. this._e = { 'data': [{listener: function(){}, once: true}] }
+function EventEmitter () {}
 
 EventEmitter.listenerCount = function (emitter, event) {
   return emitter.listeners(event).length
 }
 
-EventEmitter.prototype.on =
-EventEmitter.prototype.addListener = function (event, listener) {
+var p = EventEmitter.prototype
+p.on =
+p.addListener = function (event, listener) {
   on.call(this, event, listener)
   return this
 }
 
-EventEmitter.prototype.once = function (event, listener) {
+p.once = function (event, listener) {
   on.call(this, event, listener, true)
   return this
 }
 
-EventEmitter.prototype.emit = function (event) {
-  if (!this._events) return false
-  var args = Array.prototype.slice.call(arguments, 1)
-  var listeners = this._events[event] || []
+var emitMany = {
+  1: function (listener) { listener.call(listener) },
+  2: function (listener, args) { listener.call(listener, args[1]) },
+  3: function (listener, args) { listener.call(listener, args[1], args[2]) },
+  4: function (listener, args) { listener.call(listener, args[1], args[2], args[3]) },
+  x: function (listener, args) { listener.apply(listener, Array.prototype.slice.call(args, 1)) }
+}
+
+p.emit = function (event) {
+  var args = arguments
+  var events = this._e || (this._e = {})
+  var listeners = events[event] || []
   if (listeners.length === 0) {
     // nodejs error error event behaviour
     if (event !== 'error') return false
-    var err = args[0]
-    if (err instanceof Error) throw err
-    var error = new Error('Uncaught, unspecified "error" event.' + (err ? ' (' + err + ')' : ''))
-    error.context = err
+    var error = args[1]
+    if (error instanceof Error) throw error
+    error = new Error('Uncaught, unspecified "error" event.' + (error ? ' (' + error + ')' : ''))
+    error.context = args[1]
     throw error
   }
 
-  this._events[event] = map(listeners, function (l) {
-    l.listener.apply(l.listener, args)
+  var emitter = emitMany[args.length] || emitMany.x
+  events[event] = map(listeners, function (l) {
+    emitter(l.listener, args)
     if (l.once !== true) return l
-  })
+    if (events.removeListener) this.emit('removeListener', event, l.listener)
+  }, this)
   return true
 }
 
-EventEmitter.prototype.listeners = function (event) {
-  if (!this._events) return []
-  if (event) return getListeners.call(this, this._events[event])
-  return [].concat.apply([], map(this._events, getListeners, this))
+p.listeners = function (event) {
+  var events = this._e
+  if (!events) return []
+  if (event) return getListeners.call(this, events[event])
+  return [].concat.apply([], map(events, getListeners, this))
 }
 
-EventEmitter.prototype.removeListener = function (event, listener) {
+p.removeListener = function (event, listener) {
   assertListener(listener)
-  if (this._events) this._events[event] = (this._events[event] || []).filter(function (l) { return l.listener !== listener })
+  var events = this._e || {}
+  if (events[event]) {
+    events[event] = map(events[event], function (l) {
+      if (l.listener !== listener) return l
+      if (events.removeListener) this.emit('removeListener', event, l.listener)
+    }, this)
+  }
   return this
 }
 
-EventEmitter.prototype.removeAllListeners = function (event) {
-  if (this._events && event) this._events[event] = []
-  else this._events = {}
+p.removeAllListeners = function (event) {
+  var events = this._e || (this._e = {})
+  if (!events) return this
+  if (!event) map(Object.keys(events), function (event) { this.removeAllListeners(event) }, this)
+  else {
+    if (events.removeListener) map(this.listeners(event), function (listener) { this.emit('removeListener', event, listener) })
+    events[event] = []
+  }
   return this
 }
 
 function on (event, listener, once) {
   assertListener(listener)
-  if (!this._events) this._events = {}
-  if (!this._events[event]) this._events[event] = []
-  this._events[event].push({listener: listener, once: once})
+  var events = this._e || (this._e = {})
+  if (events.addListener) { this.emit('addListener', event, listener) }
+  (events[event] || (events[event] = [])).push({listener: listener, once: once})
 }
 
 function assertListener (listener) {
-  if (typeof listener !== 'function') {
-    throw new TypeError('listener must be a function')
-  }
+  if (typeof listener !== 'function') throw new TypeError('listener must be a function')
 }
 
 function getListeners (arr) {
@@ -74,21 +96,15 @@ function getListeners (arr) {
 }
 
 // A combination of a filter && map method
-// You can return falsy value to exclude it from the array
+// You can return a falsy value to exclude it from the array
 function map (arr, func, thisBinding) {
   if (!arr) return []
   var val
   var elems = []
-  if (Object.prototype.toString.call(arr) === '[object Array]') {
-    for (var i = arr.length - 1; i >= 0; i--) {
-      val = func.call(thisBinding, arr[i])
-      if (val) elems.push(val)
-    }
-  } else {
-    for (i in arr) {
-      val = func.call(thisBinding, arr[i])
-      if (val) elems.push(val)
-    }
+  if (Object.prototype.toString.call(arr) === '[object Object]') arr = Object.keys(arr).map(function (key) { return arr[key] })
+  for (var i = 0; i < arr.length; i++) {
+    val = func.call(thisBinding, arr[i])
+    if (val) elems.push(val)
   }
   return elems
 }

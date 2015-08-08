@@ -3,8 +3,9 @@
   "version": "1.0.1",
   "description": "",
   "main": "muemit.js",
+  "browser": "muemit.min.js",
   "scripts": {
-    "test": "standard && tape test/*.js",
+    "test": "standard && tape test/*.js && npm run minify",
     "minify": "uglifyjs --screw-ie8 -m -c -e  -- muemit.js > muemit.min.js"
   },
   "author": "Marc Bachmann <marc.brookman@gmail.com>",

@@ -1,13 +1,13 @@
 # muemit
 
 An tiny EventEmitter implementation that imitates the node.js EventEmitter API.
-Meant to run in the browser - at a size of 632bytes (minified & gzipped).
+Meant to run in the browser - at a size of 839bytes (minified & gzipped).
 
 ## API
 
 ### Initialization
 ```
-var EventEmitter = require('dynemitter')
+var EventEmitter = require('muemit')
 var emitter = new EventEmitter()
 ```
 
@@ -27,6 +27,7 @@ getSomeData(function(err, data) {
 })
 ```
 
+This method emits an `addListener` event.
 
 ### emitter.once(event, listener)
 Adds a one time listener for the event. This listener is invoked only the next time the event is fired, after which it is removed.
@@ -52,9 +53,12 @@ Returns true if event had listeners, false otherwise.
 ### emitter.removeListener(event, listener)
 Remove a listener from the listener array for the specified event. Caution: changes array indices in the listener array behind the listener.
 
+This method emits an `removeListener` event.
+
 
 ### emitter.removeAllListeners([event])
 Removes all listeners, or those of the specified event.
+It sends a `removeListener` event for every listener that got removed.
 
 Returns emitter, so calls can be chained.
 
