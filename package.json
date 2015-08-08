@@ -1,6 +1,6 @@
 {
   "name": "muemit",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "",
   "main": "muemit.js",
   "browser": "muemit.min.js",
