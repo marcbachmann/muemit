@@ -3,7 +3,6 @@ var util = require('util')
 var EventEmitter = require('../')
 
 test('EventEmitter subclass', function (t) {
-
   t.test('works without executing the constructor', function (t) {
     t.plan(1)
     function MyEE (cb) { this.on('exec', cb) }

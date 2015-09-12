@@ -4,7 +4,6 @@ var EventEmitter = require('../')
 function listener1 () {}
 
 test('addListener event', function (t) {
-
   t.test('gets sent when subscribing to an event', function (t) {
     t.plan(2)
     var e1 = new EventEmitter()
@@ -26,11 +25,9 @@ test('addListener event', function (t) {
 
     e1.once('foo', listener1)
   })
-
 })
 
 test('removeListener event', function (t) {
-
   t.test('gets sent when unsubscribng from an event', function (t) {
     t.plan(2)
     var e1 = new EventEmitter()
@@ -66,5 +63,4 @@ test('removeListener event', function (t) {
     e1.once('foo', listener1)
     e1.removeAllListeners('foo')
   })
-
 })

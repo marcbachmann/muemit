@@ -5,7 +5,6 @@ function listener1 () {}
 function listener2 () {}
 
 test('EventEmitter#removeListener(event, listener)', function (t) {
-
   t.test('requires a listener method and an event', function (t) {
     t.plan(4)
     var e1 = new EventEmitter()
