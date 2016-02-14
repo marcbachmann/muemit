@@ -43,14 +43,15 @@ p.emit = function (event) {
   }
 
   var emitter = emitMany[args.length] || emitMany.x
-  var i = listeners.length
-  while (i--) {
-    emitter(listeners[i].listener, args)
-    if (listeners[i].once === true) {
-      if (events.removeListener) this.emit('removeListener', event, listeners[i].listener)
-      listeners.splice(i, 1)
-    }
+  var ls = []
+  var l
+  for (var i = 0; i < listeners.length; i++) {
+    l = listeners[i]
+    emitter(l.listener, args)
+    if (l.once !== true) ls[ls.length] = l
+    else if (typeof events.removeListener !== 'undefined') this.emit('removeListener', event, l.listener)
   }
+  events[event] = ls
   return true
 }
 
