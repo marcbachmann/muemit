@@ -62,13 +62,14 @@ p.listeners = function (event) {
 
 p.removeListener = function (event, listener) {
   assertListener(listener)
-  var events = this._e || {}
-  if (events[event]) {
-    events[event] = map(events[event], function (l) {
-      if (l.listener !== listener) return l
-      if (events.removeListener) this.emit('removeListener', event, l.listener)
-    }, this)
-  }
+  var e = this._e || {}
+  if (!e[event]) return this
+
+  e[event] = map(e[event], function (l) {
+    if (l.listener !== listener) return l
+    if (e.removeListener) this.emit('removeListener', event, l.listener)
+  }, this)
+
   return this
 }
 
@@ -88,7 +89,7 @@ function on (event, listener, once) {
   assertListener(listener)
   var events = this._e || (this._e = {})
   if (events.addListener) { this.emit('addListener', event, listener) }
-  (events[event] || (events[event] = [])).push({listener: listener, once: once})
+  (events[event] || (events[event] = []))[events[event].length] = {listener: listener, once: once}
 }
 
 function assertListener (listener) {
@@ -105,7 +106,7 @@ function map (arr, func, thisBinding) {
   var elems = []
   for (var i = 0; i < arr.length; i++) {
     val = func.call(thisBinding, arr[i])
-    if (val) elems.push(val)
+    if (val) elems[elems.length] = val
   }
   return elems
 }
