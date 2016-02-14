@@ -77,8 +77,9 @@ p.removeAllListeners = function (event) {
   if (!events) return this
   if (!event) map(Object.keys(events), function (event) { this.removeAllListeners(event) }, this)
   else {
-    if (events.removeListener) map(this._e[event], function (l) { this.emit('removeListener', event, l.listener) }, this)
+    var removed = events[event]
     events[event] = []
+    if (events.removeListener) map(removed, function (l) { this.emit('removeListener', event, l.listener) }, this)
   }
   return this
 }
