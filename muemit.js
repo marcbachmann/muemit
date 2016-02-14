@@ -21,11 +21,11 @@ p.once = function (event, listener) {
 }
 
 var emitMany = {
-  1: function (listener) { listener.call(listener) },
-  2: function (listener, args) { listener.call(listener, args[1]) },
-  3: function (listener, args) { listener.call(listener, args[1], args[2]) },
-  4: function (listener, args) { listener.call(listener, args[1], args[2], args[3]) },
-  x: function (listener, args) { listener.apply(listener, Array.prototype.slice.call(args, 1)) }
+  1: function (listener) { listener() },
+  2: function (listener, args) { listener(args[1]) },
+  3: function (listener, args) { listener(args[1], args[2]) },
+  4: function (listener, args) { listener(args[1], args[2], args[3]) },
+  x: function (listener, args) { listener.apply(null, Array.prototype.slice.call(args, 1)) }
 }
 
 p.emit = function (event) {
