@@ -1,5 +1,7 @@
 # muemit
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/marcbachmann/muemit.svg)](https://greenkeeper.io/)
+
 An tiny EventEmitter implementation that imitates the node.js EventEmitter API.
 Meant to run in the browser - at a size of 816bytes (minified & gzipped).
 
