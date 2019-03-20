@@ -14,7 +14,7 @@
   "devDependencies": {
     "standard": "^11.0.0",
     "tape": "^4.0.2",
-    "uglify-js": "^3.0.0"
+    "uglify-js": "^3.5.0"
   },
   "directories": {
     "test": "test"
